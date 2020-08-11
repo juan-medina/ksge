@@ -26,16 +26,23 @@ kotlin {
     sourceSets {
         if (OperatingSystem.current().isLinux()) {
             linuxMain {
+                dependencies {
+                    implementation 'com.juanmedina:kecs-linux:1.0.2'
+                }
             }
         }
         if (OperatingSystem.current().isWindows()) {
             mingwMain {
+                dependencies {
+                    implementation 'com.juanmedina:kecs-mingw:1.0.2'
+                }
             }
         }
         shared {
             dependencies {
                 implementation kotlin('stdlib-common')
                 api project(':ksge')
+                implementation 'com.juanmedina:kecs:1.0.2'
             }
             if (OperatingSystem.current().isLinux()) {
                 linuxMain.dependsOn(it)

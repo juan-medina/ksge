@@ -42,6 +42,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
+                implementation 'com.juanmedina:kecs:1.0.2'
             }
         }
         commonTest {
@@ -52,6 +53,9 @@ kotlin {
         }
         if (OperatingSystem.current().isLinux()) {
             linuxMain {
+                dependencies {
+                    implementation 'com.juanmedina:kecs-linux:1.0.2'
+                }
                 dependsOn commonMain
             }
             linuxTest {
@@ -60,6 +64,9 @@ kotlin {
         }
         if (OperatingSystem.current().isWindows()) {
             mingwMain {
+                dependencies {
+                    implementation 'com.juanmedina:kecs-mingw:1.0.2'
+                }
                 dependsOn commonMain
             }
             mingwTest {
