@@ -3,4 +3,5 @@ compilerOpts = -D_POSIX_SOURCE
 staticLibraries = libraylib.a
 libraryPaths.linux = cinterop/raylib/linuxX64
 libraryPaths.mingw = cinterop/raylib/mingwX64
+linkerOpts.linux = /usr/lib/x86_64-linux-gnu/libX11.so
 linkerOpts.mingw = -lgdi32 -lwinmm
