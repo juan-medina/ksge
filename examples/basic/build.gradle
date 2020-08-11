@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     id 'org.jetbrains.kotlin.multiplatform'
 }
@@ -5,52 +7,68 @@ plugins {
 version '0.0.1'
 
 kotlin {
-    linuxX64("linux") {
-        binaries {
-            executable {
+    if (OperatingSystem.current().isLinux()) {
+        linuxX64("linux") {
+            binaries {
+                executable {
+                }
             }
         }
     }
-    mingwX64("mingw") {
-        binaries {
-            executable {
+    if (OperatingSystem.current().isWindows()) {
+        mingwX64("mingw") {
+            binaries {
+                executable {
+                }
             }
         }
     }
     sourceSets {
-        linuxMain {
+        if (OperatingSystem.current().isLinux()) {
+            linuxMain {
+            }
         }
-        mingwMain {
+        if (OperatingSystem.current().isWindows()) {
+            mingwMain {
+            }
         }
         shared {
             dependencies {
                 implementation kotlin('stdlib-common')
                 api project(':ksge')
             }
-            linuxMain.dependsOn(it)
-            mingwMain.dependsOn(it)
+            if (OperatingSystem.current().isLinux()) {
+                linuxMain.dependsOn(it)
+            }
+            if (OperatingSystem.current().isWindows()) {
+                mingwMain.dependsOn(it)
+            }
         }
     }
 }
 
 def taskGroupRunSample = 'examples'
 
-tasks.register("runBasicLinuxDebug") {
-    group = taskGroupRunSample
-    dependsOn("runDebugExecutableLinux")
+if (OperatingSystem.current().isLinux()) {
+    tasks.register("runBasicDebug") {
+        group = taskGroupRunSample
+        dependsOn("runDebugExecutableLinux")
+    }
+
+    tasks.register("runBasicRelease") {
+        group = taskGroupRunSample
+        dependsOn("runReleaseExecutableLinux")
+    }
 }
 
-tasks.register("runBasicLinuxRelease") {
-    group = taskGroupRunSample
-    dependsOn("runReleaseExecutableLinux")
-}
+if (OperatingSystem.current().isWindows()) {
+    tasks.register("runBasicDebug") {
+        group = taskGroupRunSample
+        dependsOn("runDebugExecutableMingw")
+    }
 
-tasks.register("runBasicMingwDebug") {
-    group = taskGroupRunSample
-    dependsOn("runDebugExecutableMingw")
-}
-
-tasks.register("runBasicMingwRelease") {
-    group = taskGroupRunSample
-    dependsOn("runReleaseExecutableMingw")
+    tasks.register("runBasicRelease") {
+        group = taskGroupRunSample
+        dependsOn("runReleaseExecutableMingw")
+    }
 }
