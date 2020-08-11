@@ -13,6 +13,24 @@ version LIBRARY_VERSION_NAME
 
 kotlin {
     linuxX64("linux") {
+        compilations.main {
+            cinterops {
+                raylib {
+                    defFile rootProject.file("cinterop/raylib/raylib.def")
+                    compilerOpts "-I" + rootProject.file("cinterop/raylib")
+                }
+            }
+        }
+    }
+    mingwX64("mingw") {
+        compilations.main {
+            cinterops {
+                raylib {
+                    defFile rootProject.file("cinterop/raylib/raylib.def")
+                    compilerOpts "-I" + rootProject.file("cinterop/raylib")
+                }
+            }
+        }
     }
     sourceSets {
         commonMain {
@@ -32,7 +50,12 @@ kotlin {
         linuxTest {
             dependsOn commonTest
         }
-
+        mingwMain {
+            dependsOn commonMain
+        }
+        mingwTest {
+            dependsOn commonTest
+        }
     }
 }
 

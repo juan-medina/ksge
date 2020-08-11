@@ -1,2 +1,6 @@
-headers = h/raylib.h
+headers = raylib.h
 compilerOpts = -D_POSIX_SOURCE
+staticLibraries = libraylib.a
+libraryPaths.linux = cinterop/raylib/linuxX64
+libraryPaths.mingw = cinterop/raylib/mingwX64
+linkerOpts.mingw = -lgdi32 -lwinmm

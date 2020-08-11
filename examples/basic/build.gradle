@@ -11,8 +11,16 @@ kotlin {
             }
         }
     }
+    mingwX64("mingw") {
+        binaries {
+            executable {
+            }
+        }
+    }
     sourceSets {
         linuxMain {
+        }
+        mingwMain {
         }
         shared {
             dependencies {
@@ -20,6 +28,7 @@ kotlin {
                 api project(':ksge')
             }
             linuxMain.dependsOn(it)
+            mingwMain.dependsOn(it)
         }
     }
 }
@@ -34,4 +43,14 @@ tasks.register("runBasicLinuxDebug") {
 tasks.register("runBasicLinuxRelease") {
     group = taskGroupRunSample
     dependsOn("runReleaseExecutableLinux")
+}
+
+tasks.register("runBasicMingwDebug") {
+    group = taskGroupRunSample
+    dependsOn("runDebugExecutableMingw")
+}
+
+tasks.register("runBasicMingwRelease") {
+    group = taskGroupRunSample
+    dependsOn("runReleaseExecutableMingw")
 }
