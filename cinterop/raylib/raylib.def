@@ -1,0 +1,2 @@
+headers = h/raylib.h
+compilerOpts = -D_POSIX_SOURCE

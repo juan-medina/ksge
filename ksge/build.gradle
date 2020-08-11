@@ -1,0 +1,38 @@
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform'
+}
+
+
+def GROUP_ID='com.juanmedina'
+def ARTIFACT_ID= 'kecs'
+
+def LIBRARY_VERSION_NAME='0.0.1'
+
+group GROUP_ID
+version LIBRARY_VERSION_NAME
+
+kotlin {
+    linuxX64("linux") {
+    }
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation kotlin('stdlib-common')
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+            }
+        }
+        linuxMain {
+            dependsOn commonMain
+        }
+        linuxTest {
+            dependsOn commonTest
+        }
+
+    }
+}
+

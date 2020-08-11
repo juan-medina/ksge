@@ -1,0 +1,9 @@
+build
+.gradle
+.idea
+bin
+gen
+out
+*.iml
+.DS_Store
+*.hprof

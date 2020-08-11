@@ -1,0 +1,6 @@
+rootProject.name = 'ksge-parent'
+
+enableFeaturePreview('GRADLE_METADATA')
+
+include ':ksge'
+include ':examples:basic'
