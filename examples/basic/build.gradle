@@ -2,80 +2,63 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
     id 'org.jetbrains.kotlin.multiplatform'
+    id 'idea'
 }
 
 version '0.0.1'
 
+apply plugin: 'idea'
+
+def platFormName = ''
+
 kotlin {
+    def platform = null
+    def sharedSrc = null
+
     if (OperatingSystem.current().isLinux()) {
-        linuxX64("linux") {
-            binaries {
-                executable {
-                }
-            }
+        platform = linuxX64("linux") {
         }
+        platFormName = "Linux"
     }
+
     if (OperatingSystem.current().isWindows()) {
-        mingwX64("mingw") {
-            binaries {
-                executable {
-                }
+        platform = mingwX64("mingw") {
+        }
+        platFormName = "Mingw"
+    }
+
+    platform.binaries {
+        executable {
+            copy {
+                from "$projectDir/resources"
+                into outputFile.getParent()
             }
         }
     }
+
     sourceSets {
-        if (OperatingSystem.current().isLinux()) {
-            linuxMain {
-                dependencies {
-                    implementation 'com.juanmedina:kecs-linux:1.0.2'
-                }
-            }
-        }
-        if (OperatingSystem.current().isWindows()) {
-            mingwMain {
-                dependencies {
-                    implementation 'com.juanmedina:kecs-mingw:1.0.2'
-                }
-            }
-        }
-        shared {
+        sharedSrc = shared {
             dependencies {
                 implementation kotlin('stdlib-common')
                 api project(':ksge')
                 implementation 'com.juanmedina:kecs:1.0.2'
             }
-            if (OperatingSystem.current().isLinux()) {
-                linuxMain.dependsOn(it)
-            }
-            if (OperatingSystem.current().isWindows()) {
-                mingwMain.dependsOn(it)
-            }
         }
+    }
+
+    platform.compilations.main.defaultSourceSet {
+        dependsOn(sharedSrc)
     }
 }
 
 def taskGroupRunSample = 'examples'
 
-if (OperatingSystem.current().isLinux()) {
-    tasks.register("runBasicDebug") {
-        group = taskGroupRunSample
-        dependsOn("runDebugExecutableLinux")
-    }
-
-    tasks.register("runBasicRelease") {
-        group = taskGroupRunSample
-        dependsOn("runReleaseExecutableLinux")
-    }
+tasks.register("runBasicDebug") {
+    group = taskGroupRunSample
+    dependsOn("runDebugExecutable$platFormName")
 }
 
-if (OperatingSystem.current().isWindows()) {
-    tasks.register("runBasicDebug") {
-        group = taskGroupRunSample
-        dependsOn("runDebugExecutableMingw")
-    }
-
-    tasks.register("runBasicRelease") {
-        group = taskGroupRunSample
-        dependsOn("runReleaseExecutableMingw")
-    }
+tasks.register("runBasicRelease") {
+    group = taskGroupRunSample
+    dependsOn("runReleaseExecutable$platFormName")
 }
