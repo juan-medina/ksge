@@ -16,30 +16,27 @@ group GROUP_ID
 version LIBRARY_VERSION_NAME
 
 kotlin {
+    def platform = null
+
     if (OperatingSystem.current().isLinux()) {
-        linuxX64("linux") {
-            compilations.main {
-                cinterops {
-                    raylib {
-                        defFile rootProject.file("cinterop/raylib/raylib.def")
-                        compilerOpts "-I" + rootProject.file("cinterop/raylib")
-                    }
-                }
-            }
+        platform = linuxX64("linux") {
         }
     }
+
     if (OperatingSystem.current().isWindows()) {
-        mingwX64("mingw") {
-            compilations.main {
-                cinterops {
-                    raylib {
-                        defFile rootProject.file("cinterop/raylib/raylib.def")
-                        compilerOpts "-I" + rootProject.file("cinterop/raylib")
-                    }
-                }
+        platform = mingwX64("mingw") {
+        }
+    }
+
+    platform.compilations.main {
+        cinterops {
+            raylib {
+                defFile rootProject.file("cinterop/raylib/raylib.def")
+                compilerOpts "-I" + rootProject.file("cinterop/raylib")
             }
         }
     }
+
     sourceSets {
         commonMain {
             dependencies {
